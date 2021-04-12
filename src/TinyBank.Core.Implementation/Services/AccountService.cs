@@ -146,7 +146,7 @@ namespace TinyBank.Core.Implementation.Services
 
             if (account != null) {
 
-                var state = Enum.Parse<AccountState>(options.State, true);
+                var state = Enum.Parse<AccountState>(options.StateDescription, true);
                 ((Account)result.Data).State = state;
 
                 _dbContext.SaveChanges();

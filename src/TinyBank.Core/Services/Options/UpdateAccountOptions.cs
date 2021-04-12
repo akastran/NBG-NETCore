@@ -8,6 +8,6 @@ namespace TinyBank.Core.Services.Options
 {
     public class UpdateAccountOptions
     {
-        public string State { get; set; }
+        public string StateDescription { get; set; }
     }
 }
