@@ -12,5 +12,8 @@ namespace TinyBank.Core.Services
     {
         public ApiResult<Account> Create(Guid customerId,
             Options.CreateAccountOptions options);
+        public ApiResult<Account> GetByAccountId(string accountId);
+        public ApiResult<Account> UpdateAccount(
+            string accountId, Options.UpdateAccountOptions options);
     }
 }

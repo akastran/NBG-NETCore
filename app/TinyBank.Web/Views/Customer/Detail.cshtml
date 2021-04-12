@@ -13,7 +13,7 @@
         <input class="js-customer-id" type="hidden" value="@Model.CustomerId" />
         <div class="form-group">
             <label>Vat number</label>
-            <input class="form-control" value="@Model.VatNumber">
+            <input class="form-control js-vat-number" value="@Model.VatNumber">
         </div>
 
         <div class="form-group">
@@ -29,9 +29,12 @@
         <div class="form-group">
             <label>Registered</label>
             <input class="form-control"
-                value="@Model.AuditInfo.Created.ToString("dd/MM/yyyy")">
+                   value="@Model.AuditInfo.Created.ToString("dd/MM/yyyy")">
         </div>
     </form>
+
+    <div class="js-result">
+    </div>
 
     <table class="table accounts-table">
         <thead>
@@ -42,11 +45,18 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var account in Model.Accounts) {
-                <tr>
+            @foreach (var account in Model.Accounts)
+            {
+                <tr id="@account.AccountId">
                     <td>@account.AccountId</td>
                     <td>@account.Balance</td>
                     <td>@account.AuditInfo.Created.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary js-search-account" data-toggle="modal" data-target="#accountModal">
+                            Edit
+                        </button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -56,6 +66,27 @@
         <button type="button" class="btn btn-primary js-update-customer">
             Update
         </button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="accountModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="accountModalLabel">Account Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary js-update-account">Save changes</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

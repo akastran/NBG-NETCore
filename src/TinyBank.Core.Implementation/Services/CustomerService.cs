@@ -99,7 +99,7 @@ namespace TinyBank.Core.Implementation.Services
         {
             if (options == null) {
                 return new TinyBank.Core.ApiResult<Customer>() {
-                    Code = ApiResultCode.NotFound,
+                    Code = ApiResultCode.BadRequest,
                     ErrorText = $"Bad request"
                 };
             }

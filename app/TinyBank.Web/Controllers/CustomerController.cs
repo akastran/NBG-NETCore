@@ -52,6 +52,20 @@ namespace TinyBank.Web.Controllers
                 });
         }
 
+        //[HttpGet("search")]
+        //public IActionResult Index(
+        //    [FromBody] SearchCustomerOptions options)
+        //{
+        //    options = options ?? new SearchCustomerOptions();
+        //    options.MaxResults = 100;
+
+        //    var customers = _customers.Search(options)
+        //        .OrderByDescending(c => c.AuditInfo.Created)
+        //        .ToList();
+
+        //    return Json(customers);
+        //}
+
         [HttpGet("{id:guid}")]
         public IActionResult Detail(Guid id)
         {
