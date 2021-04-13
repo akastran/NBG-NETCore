@@ -63,6 +63,7 @@ $('.js-update-customer').on('click',
             vatNumber: vatNumber
         });
 
+        $('.js-result').html(' ');
         $('.js-update-customer').attr('disabled', true);
         // ajax call
         let result = $.ajax({
@@ -73,6 +74,7 @@ $('.js-update-customer').on('click',
         }).done(response => {
             // success
             console.log('Update was successful');
+            $('.js-result').show();
             $('.js-result')
                 .html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Update was successful</strong>')
                 .addClass('alert alert-success alert-dismissible');
@@ -156,7 +158,7 @@ $(".accounts-table tbody tr").on('click',
                             <label for="sel1">Change State to:</label>
                         </div>
                         <div class="col-md-4 ms-auto">
-                            <select class="form-control js-state" id="sel1">
+                            <select class="form-control js-state-description" id="sel1">
                                 <option>Active</option>
                                 <option>Inactive</option>
                                 <option>Suspended</option>
@@ -188,14 +190,14 @@ $(".accounts-table tbody tr").on('click',
 $('.js-update-account').on('click',
     (event) => {
         /*debugger;*/
-        let state = $('.js-state').val();
+        let stateDescription = $('.js-state-description').val();
         let accountId = $('.modal-body .js-account-id').val();
         accountId = accountDetaislModalAccountId;
 
-        console.log(`${state} ${accountId}`);
+        console.log(`${stateDescription} ${accountId}`);
 
         let data = JSON.stringify({
-            state: state
+            stateDescription: stateDescription
         });
 
         $('.js-update-account').attr('disabled', true);
