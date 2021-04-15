@@ -63,7 +63,6 @@ $('.js-update-customer').on('click',
             vatNumber: vatNumber
         });
 
-        $('.js-result').html(' ');
         $('.js-update-customer').attr('disabled', true);
         // ajax call
         let result = $.ajax({
@@ -74,13 +73,18 @@ $('.js-update-customer').on('click',
         }).done(response => {
             // success
             console.log('Update was successful');
-            $('.js-result').show();
+            $('.js-result').empty();
             $('.js-result')
-                .html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Update was successful</strong>')
-                .addClass('alert alert-success alert-dismissible');
+                //.append(`<div class="close alert alert-success alert-dismissible" role="alert" data-dismiss="alert" aria-label="close">
+                //              Customer updated successfully
+                //            </div>`);
+                .append(`<div class="close alert alert-success alert-dismissible" data-dismiss="alert" aria-label="close">Update was successful<a href="#">&times;</a></div>`);
+                //.html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Update was successful</strong>')
+                //.addClass('alert alert-success alert-dismissible');
         }).fail(failure => {
             // fail
             console.log('Update failed');
+            $('.js-result').empty();
             $('.js-result')
                 .html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Update failed</strong>')
                 .addClass('alert alert-danger alert-dismissible');
