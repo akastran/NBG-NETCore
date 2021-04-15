@@ -194,7 +194,9 @@ $('.js-update-account').on('click',
         let accountId = $('.modal-body .js-account-id').val();
         accountId = accountDetaislModalAccountId;
 
-        /*itemVal = parseInt(event.currentTarget.getAttribute('data-account-state'));*/
+        //itemVal = parseInt(event.currentTarget.getAttribute('data-account-state'));
+        //Boolean(Number("1"));
+        //parseFloat(balance);
 
         console.log(`${stateDescription} ${accountId}`);
 
