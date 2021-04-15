@@ -210,6 +210,11 @@ $('.js-update-account').on('click',
         }).done(response => {
             // success
             console.log('Update was successful');
+
+            sleep(2000).then(() => {
+                $('#accountModal').modal('toggle');
+            });
+
             //$('.js-result')
             //    .html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Update was successful</strong>')
             //    .addClass('alert alert-success alert-dismissible');
@@ -223,3 +228,7 @@ $('.js-update-account').on('click',
             $('.js-update-account').attr('disabled', false);
         });
     });
+
+function sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
