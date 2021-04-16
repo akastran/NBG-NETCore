@@ -132,10 +132,10 @@ namespace TinyBank.Core.Tests
         public void Card_Chekout_Fail_InsufficientFunds()
         {
             var customer = new Customer() {
-                Firstname = "Exam5",
-                Lastname = "Test5",
-                VatNumber = "189899863",
-                Email = "myemail5@email5.gr",
+                Firstname = "Exam6",
+                Lastname = "Test6",
+                VatNumber = "169899863",
+                Email = "myemail6@email6.gr",
                 IsActive = true
             };
 
@@ -143,14 +143,14 @@ namespace TinyBank.Core.Tests
                 Balance = 500M,
                 CurrencyCode = "EUR",
                 State = Constants.AccountState.Active,
-                AccountId = "GR0000000000000001041424342"
+                AccountId = "GR0000000000000002041424342"
             };
 
             customer.Accounts.Add(account);
 
             var card = new Card() {
                 Active = true,
-                CardNumber = "4123454455577886",
+                CardNumber = "4163454455577886",
                 CardType = Constants.CardType.Debit
             };
 
@@ -177,7 +177,7 @@ namespace TinyBank.Core.Tests
             var checkoutOptions = new CheckoutOptions() {
                 CardNumber = customerCard.CardNumber,
                 ExpiryMonth = DateTimeOffset.Now.Month,
-                ExpiryYear = DateTimeOffset.Now.Year + 6,
+                ExpiryYear = DateTimeOffset.Now.Year + 5,
                 Amount = 503M
             };
 
@@ -187,6 +187,67 @@ namespace TinyBank.Core.Tests
             Assert.Equal(ApiResultCode.Conflict, checkoutResult.Code);
             Assert.Null(checkoutResult.Data);
             Assert.Contains("Insufficient funds", checkoutResult.ErrorText);
+        }
+
+        [Fact]
+        public void Card_Chekout_Fail_WrongYear()
+        {
+            var customer = new Customer() {
+                Firstname = "Exam7",
+                Lastname = "Test7",
+                VatNumber = "179899863",
+                Email = "myemail6@email6.gr",
+                IsActive = true
+            };
+
+            var account = new Account() {
+                Balance = 500M,
+                CurrencyCode = "EUR",
+                State = Constants.AccountState.Active,
+                AccountId = "GR0000000000000003041424342"
+            };
+
+            customer.Accounts.Add(account);
+
+            var card = new Card() {
+                Active = true,
+                CardNumber = "4173454455577886",
+                CardType = Constants.CardType.Debit
+            };
+
+            account.Cards.Add(card);
+
+            _dbContext.Add(customer);
+            _dbContext.SaveChanges();
+
+            var customerFromDb = _dbContext.Set<Customer>()
+                .Where(c => c.VatNumber == customer.VatNumber)
+                .Include(c => c.Accounts)
+                .ThenInclude(a => a.Cards)
+                .SingleOrDefault();
+
+            var customerCard = customerFromDb.Accounts
+                .SelectMany(a => a.Cards)
+                .Where(c => c.CardNumber == card.CardNumber)
+                .SingleOrDefault();
+
+            Assert.NotNull(customerCard);
+            Assert.Equal(Constants.CardType.Debit, customerCard.CardType);
+            Assert.True(customerCard.Active);
+
+            var checkoutOptions = new CheckoutOptions() {
+                CardNumber = customerCard.CardNumber,
+                ExpiryMonth = DateTimeOffset.Now.Month,
+                ExpiryYear = DateTimeOffset.Now.Year + 5,
+                Amount = 503M
+            };
+
+            var checkoutResult = _cards.Checkout(checkoutOptions);
+
+            Assert.NotNull(checkoutResult);
+            Assert.Equal(ApiResultCode.Conflict, checkoutResult.Code);
+            Assert.Null(checkoutResult.Data);
+            Assert.Contains("Expiry year", checkoutResult.ErrorText);
         }
     }
 }
