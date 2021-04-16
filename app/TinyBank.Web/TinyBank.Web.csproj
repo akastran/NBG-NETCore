@@ -13,8 +13,4 @@
     <ProjectReference Include="..\..\src\TinyBank.Core.Implementation\TinyBank.Core.Implementation.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Card\" />
-  </ItemGroup>
-
 </Project>

@@ -25,6 +25,6 @@ public static class ServiceCollectionExtentions
 
         @this.AddScoped<ICustomerService, CustomerService>();
         @this.AddScoped<IAccountService, AccountService>();
-        //@this.AddScoped<ICardService, CardService>();
+        @this.AddScoped<ICardService, CardService>();
     }
 }
