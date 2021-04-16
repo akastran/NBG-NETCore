@@ -50,7 +50,7 @@ namespace TinyBank.Web.Controllers
                 return result.ToActionResult();
             }
 
-            return View();
+            return View("Index", result.Data);
         }
     }
 }

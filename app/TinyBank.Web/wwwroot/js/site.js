@@ -258,10 +258,10 @@ $('.js-checkout').on('click',
         console.log(`${cardNumber} ${expiryMonthInt} ${expiryYearInt} ${amountFloat}`);
 
         let data = JSON.stringify({
-            cardNumber: cardNumber,
-            expiryMonth: expiryMonthInt,
-            expiryMonth: expiryMonthInt,
-            amount: amountFloat
+            CardNumber: cardNumber,
+            ExpiryMonth: expiryMonth,
+            ExpiryYear: expiryYear,
+            Amount: amountFloat
         });
 
         $('.js-js-checkout').attr('disabled', true);
