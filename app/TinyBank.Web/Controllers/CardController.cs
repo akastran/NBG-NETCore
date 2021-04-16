@@ -40,5 +40,17 @@ namespace TinyBank.Web.Controllers
         {
             return View();
         }
+
+        [HttpPut("checkout")]
+        public IActionResult Checkout([FromBody] CheckoutOptions options)
+        {
+            var result = _cards.Checkout(options);
+
+            if (!result.IsSuccessful()) {
+                return result.ToActionResult();
+            }
+
+            return View();
+        }
     }
 }

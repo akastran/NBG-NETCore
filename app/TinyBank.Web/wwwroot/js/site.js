@@ -240,3 +240,61 @@ $('.js-update-account').on('click',
 function sleep(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
 }
+
+$('.js-checkout').on('click',
+    (event) => {
+        /*debugger;*/
+        let cardNumber = $('#js-checkout-card-id').val();
+        let expiryMonth = $('#js-checkout-expiry-month').val();
+        let expiryYear = $('#js-checkout-expiry-year').val();
+        let amount = $('#js-checkout-amount').val();
+
+        console.log(`${cardNumber} ${expiryMonth} ${expiryYear} ${amount}`);
+
+        let expiryMonthInt = parseInt(expiryMonth);
+        let expiryYearInt = parseInt(expiryYear);
+        let amountFloat = parseFloat(amount);
+
+        console.log(`${cardNumber} ${expiryMonthInt} ${expiryYearInt} ${amountFloat}`);
+
+        let data = JSON.stringify({
+            cardNumber: cardNumber,
+            expiryMonth: expiryMonthInt,
+            expiryMonth: expiryMonthInt,
+            amount: amountFloat
+        });
+
+        $('.js-js-checkout').attr('disabled', true);
+        // ajax call
+        let result = $.ajax({
+            url: '/card/checkout',
+            method: 'PUT',
+            contentType: 'application/json',
+            data: data
+        }).done(response => {
+
+            //if (response.) {
+
+            //}
+            // success
+            console.log('Chekckout was successful');
+            $('.js-checkout-result').empty();
+            $('.js-checkout-result')
+                //.append(`<div class="close alert alert-success alert-dismissible" role="alert" data-dismiss="alert" aria-label="close">
+                //              Customer updated successfully
+                //            </div>`);
+                /*.append(`<div class="close alert alert-success alert-dismissible" data-dismiss="alert" aria-label="close">Checkout was successful<a href="#">&times;</a></div>`);*/
+            .html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Checkout was successful</strong>')
+            .addClass('alert alert-success alert-dismissible');
+        }).fail(failure => {
+            // fail
+            console.log('Update failed');
+            $('.js-checkout-result').empty();
+            $('.js-checkout-result')
+                /*.append(`<div class="close alert alert-danger alert-dismissible" data-dismiss="alert" aria-label="close">Checkout failed<a href="#">&times;</a></div>`);*/
+                .html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Checkout failed</strong>')
+                .addClass('alert alert-danger alert-dismissible');
+        }).always(() => {
+            $('.js-checkout').attr('disabled', false);
+        });
+    });
