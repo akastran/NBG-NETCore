@@ -49,7 +49,7 @@ namespace TinyBank.Core.Implementation.Services
             return q;
         }
 
-        public ApiResult<Card> GetCardById(Guid? cardId)
+        public ApiResult<Card> GetByCardId(Guid? cardId)
         {
             if (cardId == null) {
                 return new TinyBank.Core.ApiResult<Card>() {
@@ -77,7 +77,7 @@ namespace TinyBank.Core.Implementation.Services
             };
         }
 
-        public ApiResult<Card> GetCardByNumber(string cardNumber)
+        public ApiResult<Card> GetByCardNumber(string cardNumber)
         {
             if (string.IsNullOrWhiteSpace(cardNumber)) {
                 return new TinyBank.Core.ApiResult<Card>() {
@@ -103,6 +103,95 @@ namespace TinyBank.Core.Implementation.Services
             return new ApiResult<Card>() {
                 Data = card
             };
+        }
+
+        public ApiResult<Card> Checkout(CheckoutOptions options)
+        {
+            if (options == null) {
+                return new TinyBank.Core.ApiResult<Card>() {
+                    Code = ApiResultCode.BadRequest,
+                    ErrorText = $"Bad request"
+                };
+            }
+
+            var result = GetByCardNumber(options.CardNumber);
+
+            if (!result.IsSuccessful()) {
+                return result;
+            }
+
+            var card = result.Data;
+
+            var cardValidationsresult = CardValidations(card, options);
+            if (!cardValidationsresult.IsSuccessful()) {
+                return result;
+            }
+
+            var accountValidationsresult = AccountValidations(card, options);
+            if (!accountValidationsresult.IsSuccessful()) {
+                return result;
+            }
+
+            if (card != null) {
+                card.Accounts[0].Balance -= options.Amount;
+
+                _dbContext.SaveChanges();
+            }
+            else {
+                return new TinyBank.Core.ApiResult<Card>() {
+                    Code = ApiResultCode.NotFound,
+                    ErrorText = $"Card not found !"
+                };
+            }
+
+            return new ApiResult<Card>() {
+                Data = card
+            };
+        }
+
+        public ApiResult<Card> CardValidations(Card card, CheckoutOptions options)
+        {
+            var result = new TinyBank.Core.ApiResult<Card>();
+
+            if (!card.Active) {
+                result.Code = ApiResultCode.Conflict;
+                result.ErrorText = $"Card {card.CardNumber} is not active!";
+            }
+            else if (options.ExpiryMonth != card.Expiration.Month) {
+                result.Code = ApiResultCode.Conflict;
+                result.ErrorText = $"Expiry month {options.ExpiryMonth} is incorrect!";
+            }
+            else if (options.ExpiryYear != card.Expiration.Year) {
+                result.Code = ApiResultCode.Conflict;
+                result.ErrorText = $"Expiry year {options.ExpiryYear} is incorrect!";
+            }
+            else {
+                result.Code = ApiResultCode.Success;
+                result.Data = card;
+            }
+
+            return result;
+        }
+
+        public ApiResult<Card> AccountValidations(Card card, CheckoutOptions options)
+        {
+            var result = new TinyBank.Core.ApiResult<Card>();
+
+            if (card.Accounts[0].State != Constants.AccountState.Active) {
+                result.Code = ApiResultCode.Conflict;
+                result.ErrorText = $"Related Account is not active!";
+                //result.ErrorText = $"Account {card.Accounts[0].AccountId} is not active!";
+            }
+            else if (options.Amount > card.Accounts[0].Balance) {
+                result.Code = ApiResultCode.Conflict;
+                result.ErrorText = $"Inusfficient funds!";
+            }
+            else {
+                result.Code = ApiResultCode.Success;
+                result.Data = card;
+            }
+
+            return result;
         }
     }
 }

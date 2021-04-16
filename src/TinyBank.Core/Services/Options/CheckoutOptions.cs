@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace TinyBank.Web.Models
+namespace TinyBank.Core.Services.Options
 {
-    public class CheckoutViewModel
+    public class CheckoutOptions
     {
-        public Guid CardId { get; set; }
+        public string CardNumber { get; set; }
         public int ExpiryMonth { get; set; }
         public int ExpiryYear { get; set; }
         public decimal Amount { get; set; }
