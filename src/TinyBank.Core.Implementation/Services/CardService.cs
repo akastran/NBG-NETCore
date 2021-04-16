@@ -52,7 +52,7 @@ namespace TinyBank.Core.Implementation.Services
         public ApiResult<Card> GetByCardId(Guid? cardId)
         {
             if (cardId == null) {
-                return new TinyBank.Core.ApiResult<Card>() {
+                return new ApiResult<Card>() {
                     Code = ApiResultCode.BadRequest,
                     ErrorText = $"Bad request - Empty Card Id"
                 };
@@ -67,7 +67,7 @@ namespace TinyBank.Core.Implementation.Services
 
             if (card == null) {
                 return new ApiResult<Card>() {
-                    Code = Constants.ApiResultCode.NotFound,
+                    Code = ApiResultCode.NotFound,
                     ErrorText = $"Card {cardId} was not found"
                 };
             }
@@ -80,7 +80,7 @@ namespace TinyBank.Core.Implementation.Services
         public ApiResult<Card> GetByCardNumber(string cardNumber)
         {
             if (string.IsNullOrWhiteSpace(cardNumber)) {
-                return new TinyBank.Core.ApiResult<Card>() {
+                return new ApiResult<Card>() {
                     Code = ApiResultCode.BadRequest,
                     ErrorText = $"Bad request - Empty Card Number"
                 };
@@ -95,7 +95,7 @@ namespace TinyBank.Core.Implementation.Services
 
             if (card == null) {
                 return new ApiResult<Card>() {
-                    Code = Constants.ApiResultCode.NotFound,
+                    Code = ApiResultCode.NotFound,
                     ErrorText = $"Card {cardNumber} was not found"
                 };
             }
@@ -108,7 +108,7 @@ namespace TinyBank.Core.Implementation.Services
         public ApiResult<Card> Checkout(CheckoutOptions options)
         {
             if (options == null) {
-                return new TinyBank.Core.ApiResult<Card>() {
+                return new ApiResult<Card>() {
                     Code = ApiResultCode.BadRequest,
                     ErrorText = $"Bad request"
                 };
@@ -124,12 +124,12 @@ namespace TinyBank.Core.Implementation.Services
 
             var cardValidationsresult = CardValidations(card, options);
             if (!cardValidationsresult.IsSuccessful()) {
-                return result;
+                return cardValidationsresult;
             }
 
             var accountValidationsresult = AccountValidations(card, options);
             if (!accountValidationsresult.IsSuccessful()) {
-                return result;
+                return accountValidationsresult;
             }
 
             if (card != null) {
@@ -138,7 +138,7 @@ namespace TinyBank.Core.Implementation.Services
                 _dbContext.SaveChanges();
             }
             else {
-                return new TinyBank.Core.ApiResult<Card>() {
+                return new ApiResult<Card>() {
                     Code = ApiResultCode.NotFound,
                     ErrorText = $"Card not found !"
                 };
@@ -151,7 +151,7 @@ namespace TinyBank.Core.Implementation.Services
 
         public ApiResult<Card> CardValidations(Card card, CheckoutOptions options)
         {
-            var result = new TinyBank.Core.ApiResult<Card>();
+            var result = new ApiResult<Card>();
 
             if (!card.Active) {
                 result.Code = ApiResultCode.Conflict;
@@ -175,16 +175,16 @@ namespace TinyBank.Core.Implementation.Services
 
         public ApiResult<Card> AccountValidations(Card card, CheckoutOptions options)
         {
-            var result = new TinyBank.Core.ApiResult<Card>();
+            var result = new ApiResult<Card>();
 
-            if (card.Accounts[0].State != Constants.AccountState.Active) {
+            if (card.Accounts[0].State != AccountState.Active) {
                 result.Code = ApiResultCode.Conflict;
                 result.ErrorText = $"Related Account is not active!";
                 //result.ErrorText = $"Account {card.Accounts[0].AccountId} is not active!";
             }
             else if (options.Amount > card.Accounts[0].Balance) {
                 result.Code = ApiResultCode.Conflict;
-                result.ErrorText = $"Inusfficient funds!";
+                result.ErrorText = $"Insufficient funds!";
             }
             else {
                 result.Code = ApiResultCode.Success;
