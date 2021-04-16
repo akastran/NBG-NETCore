@@ -11,6 +11,5 @@ namespace TinyBank.Core.Services
     {
         public ApiResult<Card> GetCardById(Guid? cardId);
         public ApiResult<Card> GetCardByNumber(string cardNumber);
-        //public ApiResult<Card> RegisterCard(Options.RegisterCardOptions options);
     }
 }

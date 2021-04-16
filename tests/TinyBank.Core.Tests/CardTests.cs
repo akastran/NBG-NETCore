@@ -22,25 +22,25 @@ namespace TinyBank.Core.Tests
         public void Card_Register_Success()
         {
             var customer = new Customer() {
-                Firstname = "Dimitris",
-                Lastname = "Pnevmatikos",
-                VatNumber = "117008855",
-                Email = "dpnevmatikos@codehub.gr",
+                Firstname = "Exam",
+                Lastname = "Test",
+                VatNumber = "134679852",
+                Email = "myemail@email.gr",
                 IsActive = true
             };
 
             var account = new Account() {
-                Balance = 1000M,
+                Balance = 500M,
                 CurrencyCode = "EUR",
                 State = Constants.AccountState.Active,
-                AccountId = "GR123456789121"
+                AccountId = "GR0000000000000004042834002"
             };
 
             customer.Accounts.Add(account);
 
             var card = new Card() {
                 Active = true,
-                CardNumber = "4111111111111111",
+                CardNumber = "4223444455556666",
                 CardType = Constants.CardType.Debit
             };
 
@@ -50,14 +50,14 @@ namespace TinyBank.Core.Tests
             _dbContext.SaveChanges();
 
             var customerFromDb = _dbContext.Set<Customer>()
-                .Where(c => c.VatNumber == "117008855")
+                .Where(c => c.VatNumber == "134679852")
                 .Include(c => c.Accounts)
                 .ThenInclude(a => a.Cards)
                 .SingleOrDefault();
 
             var customerCard = customerFromDb.Accounts
                 .SelectMany(a => a.Cards)
-                .Where(c => c.CardNumber == "4111111111111111")
+                .Where(c => c.CardNumber == "4223444455556666")
                 .SingleOrDefault();
 
             Assert.NotNull(customerCard);

@@ -20,18 +20,6 @@ namespace TinyBank.Core.Implementation.Services
             _dbContext = dbContext;
         }
 
-        //private bool CardExists(Guid cardId)
-        //{
-        //    if (cardId == null) {
-        //        throw new ArgumentNullException(cardId.ToString());
-        //    }
-
-        //    return SearchCard(
-        //        new SearchCardOptions() {
-        //            CardId = cardId
-        //        }).Any();
-        //}
-
         public IQueryable<Card> SearchCard(SearchCardOptions options)
         {
             if (options == null) {
@@ -116,53 +104,5 @@ namespace TinyBank.Core.Implementation.Services
                 Data = card
             };
         }
-
-        //public ApiResult<Card> RegisterCard(RegisterCardOptions options)
-        //{
-        //    if (options == null) {
-        //        return new ApiResult<Card>() {
-        //            Code = ApiResultCode.BadRequest,
-        //            ErrorText = $"Null {nameof(options)}"
-        //        };
-        //    }
-
-        //    if (!IsValidCardType(options.CardType)) {
-        //        return new ApiResult<Card>() {
-        //            Code = ApiResultCode.BadRequest,
-        //            ErrorText = $"Invalid Card type {options.CardType}"
-        //        };
-        //    }
-
-        //    var customerExists = Exists(options.VatNumber);
-
-        //    if (customerExists) {
-        //        return new ApiResult<Customer>() {
-        //            Code = ApiResultCode.Conflict,
-        //            ErrorText = $"Customer with Vat number {options.VatNumber} already exists"
-        //        };
-        //    }
-
-        //    var customer = _mapper.Map<Customer>(options);
-        //    customer.IsActive = true;
-
-        //    _dbContext.Add(customer);
-
-        //    try {
-        //        _dbContext.SaveChanges();
-        //    }
-        //    catch (Exception ex) {
-        //        // log
-        //        Console.WriteLine(ex);
-
-        //        return new ApiResult<Customer>() {
-        //            Code = ApiResultCode.InternalServerError,
-        //            ErrorText = $"Customer could not be saved"
-        //        };
-        //    }
-
-        //    return new ApiResult<Customer>() {
-        //        Data = customer
-        //    };
-        //}
     }
 }
