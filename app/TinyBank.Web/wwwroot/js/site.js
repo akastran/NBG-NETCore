@@ -294,7 +294,7 @@ $('.js-checkout').on('click',
             $('.js-checkout-form').empty();
             $('.js-checkout-result')
                 /*.append(`<div class="close alert alert-danger alert-dismissible" data-dismiss="alert" aria-label="close">Checkout failed<a href="#">&times;</a></div>`);*/
-                .html(<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Checkout failed</strong>')
+                .html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Checkout failed</strong>')
                 .addClass('alert alert-danger alert-dismissible');
         }).always(() => {
             $('.js-checkout').attr('disabled', false);
